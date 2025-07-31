@@ -10,7 +10,7 @@ export default function Home() {
     permitCosts: '',
     contingencyPercent: '10',
     designFees: '',
-    verticalBuildCost: '',
+    verticalBuildCostPerSqFt: '',
     homeSize: '',
     totalMargin: '20',
   });
@@ -23,8 +23,9 @@ export default function Home() {
   const parse = (val) => parseFloat(val) || 0;
 
   const costsToSale = parse(inputs.targetResalePrice) * 0.06;
-  const contingencyAmount = (parse(inputs.verticalBuildCost) * parse(inputs.contingencyPercent)) / 100;
-  const monthlyDraw = parse(inputs.verticalBuildCost) * 0.3;
+  const verticalBuildCost = parse(inputs.verticalBuildCostPerSqFt) * parse(inputs.homeSize);
+  const contingencyAmount = (verticalBuildCost * parse(inputs.contingencyPercent)) / 100;
+  const monthlyDraw = verticalBuildCost * 0.3;
   const interestRate = 0.085;
   const loanInterest = Array.from({ length: 6 }, (_, i) => monthlyDraw * (i + 1))
     .reduce((sum, val) => sum + val, 0) * (interestRate / 12);
@@ -34,12 +35,12 @@ export default function Home() {
     parse(inputs.originationFee) +
     parse(inputs.permitCosts) +
     parse(inputs.designFees) +
-    parse(inputs.verticalBuildCost) +
+    verticalBuildCost +
     contingencyAmount +
     costsToSale +
     loanInterest;
 
-  const verticalCostPerSqFt = parse(inputs.homeSize) ? parse(inputs.verticalBuildCost) / parse(inputs.homeSize) : 0;
+  const verticalCostPerSqFt = parse(inputs.verticalBuildCostPerSqFt);
   const totalCostPerSqFt = parse(inputs.homeSize) ? totalProjectCost / parse(inputs.homeSize) : 0;
 
   const expectedProfit = parse(inputs.targetResalePrice) - totalProjectCost;
@@ -53,7 +54,7 @@ export default function Home() {
     { name: 'targetResalePrice', label: 'Target Resale Price' },
     { name: 'permitCosts', label: 'Permit Costs' },
     { name: 'designFees', label: 'Design Fees' },
-    { name: 'verticalBuildCost', label: 'Vertical Build Cost' },
+    { name: 'verticalBuildCostPerSqFt', label: 'Vertical Build Cost per SqFt' },
     { name: 'homeSize', label: 'Home Size (SqFt)' }
   ];
 
