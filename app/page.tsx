@@ -45,25 +45,37 @@ export default function Home() {
     ? (expectedProfit / inputs.targetResalePrice) * 100
     : 0;
 
+  const inputFields = [
+    { name: 'lotCost', label: 'Lot Cost' },
+    { name: 'originationFee', label: 'Origination Fee' },
+    { name: 'targetResalePrice', label: 'Target Resale Price' },
+    { name: 'permitCosts', label: 'Permit Costs' },
+    { name: 'designFees', label: 'Design Fees' },
+    { name: 'verticalBuildCost', label: 'Vertical Build Cost' },
+    { name: 'homeSize', label: 'Home Size (SqFt)' }
+  ];
+
   return (
     <main className="max-w-md mx-auto p-4 space-y-6 text-sm">
       <h1 className="text-xl font-bold text-center mb-2">🏗️ Story Builders Cost Calculator</h1>
 
-      <div className="grid gap-4">
-        {["lotCost", "originationFee", "targetResalePrice", "permitCosts", "designFees", "verticalBuildCost", "homeSize"].map((field) => (
-          <input
-            key={field}
-            type="number"
-            name={field}
-            placeholder={field.replace(/([A-Z])/g, ' $1')}
-            value={inputs[field]}
-            onChange={handleChange}
-            className="w-full border rounded p-2"
-          />
+      <div className="space-y-3">
+        {inputFields.map(({ name, label }) => (
+          <div key={name} className="flex flex-col">
+            <label htmlFor={name}>{label}</label>
+            <input
+              id={name}
+              type="number"
+              name={name}
+              value={inputs[name]}
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
         ))}
 
-        <div className="flex items-center gap-2">
-          <label className="whitespace-nowrap">Contingency %</label>
+        <div className="flex flex-col">
+          <label htmlFor="contingencyPercent">Contingency %</label>
           <input
             type="number"
             name="contingencyPercent"
@@ -87,4 +99,3 @@ export default function Home() {
     </main>
   );
 }
-
