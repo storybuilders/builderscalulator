@@ -4,45 +4,47 @@ import { useState } from 'react';
 
 export default function Home() {
   const [inputs, setInputs] = useState({
-    lotCost: 0,
-    originationFee: 0,
-    targetResalePrice: 0,
-    permitCosts: 0,
-    contingencyPercent: 10,
-    designFees: 0,
-    verticalBuildCost: 0,
-    homeSize: 0,
-    totalMargin: 20,
+    lotCost: '',
+    originationFee: '',
+    targetResalePrice: '',
+    permitCosts: '',
+    contingencyPercent: '10',
+    designFees: '',
+    verticalBuildCost: '',
+    homeSize: '',
+    totalMargin: '20',
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setInputs({ ...inputs, [name]: parseFloat(value) || 0 });
+    setInputs({ ...inputs, [name]: value });
   };
 
-  const costsToSale = inputs.targetResalePrice * 0.06;
-  const contingencyAmount = (inputs.verticalBuildCost * inputs.contingencyPercent) / 100;
-  const monthlyDraw = inputs.verticalBuildCost * 0.3;
+  const parse = (val) => parseFloat(val) || 0;
+
+  const costsToSale = parse(inputs.targetResalePrice) * 0.06;
+  const contingencyAmount = (parse(inputs.verticalBuildCost) * parse(inputs.contingencyPercent)) / 100;
+  const monthlyDraw = parse(inputs.verticalBuildCost) * 0.3;
   const interestRate = 0.085;
   const loanInterest = Array.from({ length: 6 }, (_, i) => monthlyDraw * (i + 1))
     .reduce((sum, val) => sum + val, 0) * (interestRate / 12);
 
   const totalProjectCost =
-    inputs.lotCost +
-    inputs.originationFee +
-    inputs.permitCosts +
-    inputs.designFees +
-    inputs.verticalBuildCost +
+    parse(inputs.lotCost) +
+    parse(inputs.originationFee) +
+    parse(inputs.permitCosts) +
+    parse(inputs.designFees) +
+    parse(inputs.verticalBuildCost) +
     contingencyAmount +
     costsToSale +
     loanInterest;
 
-  const verticalCostPerSqFt = inputs.homeSize ? inputs.verticalBuildCost / inputs.homeSize : 0;
-  const totalCostPerSqFt = inputs.homeSize ? totalProjectCost / inputs.homeSize : 0;
+  const verticalCostPerSqFt = parse(inputs.homeSize) ? parse(inputs.verticalBuildCost) / parse(inputs.homeSize) : 0;
+  const totalCostPerSqFt = parse(inputs.homeSize) ? totalProjectCost / parse(inputs.homeSize) : 0;
 
-  const expectedProfit = inputs.targetResalePrice - totalProjectCost;
-  const marginPercent = inputs.targetResalePrice
-    ? (expectedProfit / inputs.targetResalePrice) * 100
+  const expectedProfit = parse(inputs.targetResalePrice) - totalProjectCost;
+  const marginPercent = parse(inputs.targetResalePrice)
+    ? (expectedProfit / parse(inputs.targetResalePrice)) * 100
     : 0;
 
   const inputFields = [
@@ -69,6 +71,7 @@ export default function Home() {
               name={name}
               value={inputs[name]}
               onChange={handleChange}
+              placeholder="0"
               className="w-full border rounded p-2"
             />
           </div>
@@ -81,6 +84,7 @@ export default function Home() {
             name="contingencyPercent"
             value={inputs.contingencyPercent}
             onChange={handleChange}
+            placeholder="10"
             className="w-full border rounded p-2"
           />
         </div>
